@@ -34,6 +34,7 @@ function EditToolbar() {
                 id='add-song-button'
                 disabled={editStatus}
                 value="+"
+                onClick={() => store.addSong()}
                 className={enabledButtonClass}
             />
             <input

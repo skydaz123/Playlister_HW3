@@ -32,6 +32,7 @@ function ListCard(props) {
 
     const handleDeleteList = (id, event) => {
         event.stopPropagation();
+        console.log("clicked");
         store.markListForDeletion(id);
     }
 
@@ -51,7 +52,7 @@ function ListCard(props) {
         }
     }
     function handleUpdateText(event) {
-        setText(event.target.value );
+        setText(event.target.value);
     }
 
     let selectClass = "unselected-list-card";

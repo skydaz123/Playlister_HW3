@@ -3,9 +3,10 @@ import { GlobalStoreContext } from '../store'
 
 const DeleteListModal = () => {
     const { store } = useContext(GlobalStoreContext);
-    let name = "";
-    if (store.deleteListId !== null){
-        name = store.currentList.name                                  ;
+    let modalName = "";
+    console.log(store);
+    if (store.currentList !== undefined && store.deleteListId !== null){
+        modalName = store.currentList.name;
     }
     return (
         <div 
@@ -18,19 +19,19 @@ const DeleteListModal = () => {
                     </div>
                     <div className="modal-center">
                         <div className="modal-center-content">
-                            Are you sure you wish to permanently delete the {name} playlist?
+                            Are you sure you wish to permanently delete the {modalName} playlist?
                         </div>
                     </div>
                     <div className="modal-south">
                         <input type="button" 
                             id="delete-list-confirm-button" 
                             className="modal-button" 
-                            onClick={store.deleteList()}
+                            onClick={() => store.deleteList()}
                             value='Confirm' />
                         <input type="button" 
                             id="delete-list-cancel-button" 
                             className="modal-button" 
-                            onClick={store.hideDeleteListModal()}
+                            onClick={() => store.hideDeleteListModal()}
                             value='Cancel' />
                     </div>
                 </div>

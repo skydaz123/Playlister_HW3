@@ -4,7 +4,6 @@ import { GlobalStoreContext } from '../store'
 const DeleteListModal = () => {
     const { store } = useContext(GlobalStoreContext);
     let modalName = "";
-    console.log(store);
     if (store.currentList !== undefined && store.deleteListId !== null){
         modalName = store.currentList.name;
     }

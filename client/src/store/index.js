@@ -2,6 +2,11 @@ import { createContext, useState } from 'react'
 import jsTPS from '../common/jsTPS'
 import api from '../api'
 export const GlobalStoreContext = createContext({});
+
+import MoveSong_Transaction from '../transactions/MoveSong_transaction';
+import AddSong_Transaction from '../transactions/AddSong_Transaction';
+import EditSong_Transaction from '../transactions/EditSong_Transaction';
+import DeleteSong_Transaction from '../transactions/DeleteSong_Transaction';
 /*
     This is our global data store. Note that it uses the Flux design pattern,
     which makes use of things like actions and reducers. 
@@ -268,24 +273,56 @@ export const useGlobalStore = () => {
         asyncDeleteList()
     }
 
+    /*store.addAddSongTransaction = function () {
+        let transaction = new AddSong_Transaction(store);
+        tps.addAddSongTransaction(transaction);
+    }
+
+    store.addMoveSongTransaction = (start, end) => {
+        let transaction = new MoveSong_Transaction(store, start, end);
+        tps.addTransaction(transaction);
+    }
+
+    store.addDeleteSongTransaction = (index, originalSong) => {
+        let transaction = new DeleteSong_Transaction(store, index, originalSong);
+        tps.addTransaction(transaction);
+    }
+
+    store.addEditSongTransaction = (index, title, artist, youTubeId, originalSong) => {
+        let transaction = new EditSong_Transaction(store, index, originalSong, title, artist, youTubeId);
+        tps.addTransaction(transaction);
+    }*/
+
     store.addSong = function () {
         async function asyncAddSong() {
+            let list = store.currentList;
             let song = {
                 "title": "Untitled",
                 "artist": "Unknown",
                 "youTubeId": "dQw4w9WgXcQ"
             }
-            store.currentList.songs.push(song);
-            let response = await api.putPlaylist(store.currentList._id, store.currentList);
+            list.songs.push(song);
+            await api.putPlaylist(list._id, list);
+            store.setCurrentList(list._id);
+        }
+        asyncAddSong();
+    }
+
+
+    /*store.popSong = function() {
+        async function asyncPopSong() {
+            let list = store.currentList;
+            list.songs.pop();
+            let response = await api.putPlaylist(list._id, list);
             if (response.data.success) {
-                store.setCurrentList(store.currentList._id);
+                store.setCurrentList(list._id);
             }
             else {
                 console.log("API FAILED TO GET THE LIST PAIRS");
             }
         }
-        asyncAddSong();
-    }
+        asyncPopSong();
+    } */
 
     /*store.deleteSong = function (index) {
         async function asyncDeleteSong(test_index){
@@ -297,9 +334,9 @@ export const useGlobalStore = () => {
                 "youTubeId": song.youTubeId
             }
             let newList = list.songs.splice(index,1);
-            let response = await api.putPlaylist(store.currentList._id, newList);
+            let response = await api.putPlaylist(list._id, newList);
             if (response.data.success) {
-                store.setCurrentList(store.currentList._id);
+                store.setCurrentList(list._id);
             }
             else {
                 console.log("API FAILED TO GET THE LIST PAIRS");
@@ -308,27 +345,21 @@ export const useGlobalStore = () => {
         asyncDeleteSong(index);
     } */
 
-    store.insertSong = function (index, song) {
+    /*store.insertSong = function (index, song) {
         async function asyncInsertSong(test_index, test_song) {
             let list = store.currentList;
             list.songs.splice(test_index, 0, test_song);
-            let response = await api.putPlaylist(store.currentList._id, list);
+            let response = await api.putPlaylist(list._id, list);
             if (response.data.success) {
-                store.setCurrentList(store.currentList._id);
+                store.setCurrentList(list._id);
             }
             else {
                 console.log("API FAILED TO GET THE LIST PAIRS");
             }
         }
         asyncInsertSong(index, song);
-    }
+    }*/
 
-    /*store.popSong = function() {
-        async function asyncPopSong() {
-            store.currentList.pop();
-
-        }
-    } */
 
 
     /*store.moveSong(start, end) {

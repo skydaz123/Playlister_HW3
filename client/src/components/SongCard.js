@@ -22,6 +22,7 @@ function SongCard(props) {
             <input
                 type="button"
                 id={"remove-song-" + index}
+                onClick={() => store.showDeleteSongModal(index)}
                 className="list-card-button"
                 value={"\u2715"}
             />

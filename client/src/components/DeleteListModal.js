@@ -25,7 +25,9 @@ const DeleteListModal = () => {
                         <input type="button" 
                             id="delete-list-confirm-button" 
                             className="modal-button" 
-                            onClick={() => store.deleteList()}
+                            onClick={() => {
+                                console.log(store.deleteListId)
+                                store.deleteList(store.deleteListId)}}
                             value='Confirm' />
                         <input type="button" 
                             id="delete-list-cancel-button" 

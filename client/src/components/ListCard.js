@@ -33,7 +33,8 @@ function ListCard(props) {
     const handleDeleteList = (id, event) => {
         event.stopPropagation();
         console.log("clicked");
-        store.markListForDeletion(id);
+        console.log("handler id is: " + id);
+        store.showDeleteListModal(id);
     }
 
     function toggleEdit() {

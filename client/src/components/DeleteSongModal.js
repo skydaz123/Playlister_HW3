@@ -38,7 +38,7 @@ const DeleteSongModal = () => {
               type="button"
               id="delete-song-confirm-button"
               className="modal-button"
-              //onClick={}
+              onClick={() => store.deleteSong(store.deleteSongIndex)}
               value="Confirm"
             />
             <input

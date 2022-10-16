@@ -337,6 +337,7 @@ export const useGlobalStore = () => {
       store.setCurrentList(list._id);
     }
     asyncDeleteSong(index);
+    store.hideDeleteSongModal();
   };
 
   /*store.popSong = function() {

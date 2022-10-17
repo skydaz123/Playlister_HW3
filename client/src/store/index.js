@@ -357,8 +357,21 @@ export const useGlobalStore = () => {
     tps.addTransaction(transaction);
   };
 
-  store.addEditSongTransaction = function (index, originalSong, title, artist, youTubeId) {
-    let transaction = new EditSong_Transaction(store, index, originalSong, title, artist, youTubeId);
+  store.addEditSongTransaction = function (
+    index,
+    originalSong,
+    title,
+    artist,
+    youTubeId
+  ) {
+    let transaction = new EditSong_Transaction(
+      store,
+      index,
+      originalSong,
+      title,
+      artist,
+      youTubeId
+    );
     tps.addTransaction(transaction);
   };
 
@@ -408,7 +421,7 @@ export const useGlobalStore = () => {
     asyncInsertSong(index, song);
   };
 
-  store.editSong = function(index, title, artist, youTubeId) {
+  store.editSong = function (index, title, artist, youTubeId) {
     async function asyncEditSong(
       test_index,
       initTitle,
@@ -429,7 +442,7 @@ export const useGlobalStore = () => {
     store.hideEditSongModal();
   };
 
-  store.reverseEditSong = function(index, song) {
+  store.reverseEditSong = function (index, song) {
     async function asyncReverseEditSong(test_index, test_song) {
       let list = store.currentList;
       list.songs[test_index] = test_song;
@@ -437,27 +450,34 @@ export const useGlobalStore = () => {
       store.setCurrentList(list._id);
     }
     asyncReverseEditSong(index, song);
-  }
-  /*store.moveSong(start, end) {
-            let list = store.currentList;
-            start -= 1;
-            end -= 1;
-            if (start < end) {
-                let temp = list.songs[start];
-                for (let i = start; i < end; i++) {
-                    list.songs[i] = list.songs[i + 1];
-                }
-                list.songs[end] = temp;
-            }
-            else if (start > end) {
-                let temp = list.songs[start];
-                for (let i = start; i > end; i--) {
-                    list.songs[i] = list.songs[i - 1];
-                }
-                list.songs[end] = temp;
-            }
-            store.setCurrentList(list.id, list.songs);
-    }*/
+  };
+
+  store.moveSong = function (start, end) {
+    console.log("MOVING SONG");
+    console.log("START IS " + start);
+    console.log("END IS " + end);
+    async function asyncMoveSong(test_start, test_end) {
+      let list = store.currentList;
+      
+      if (test_start < test_end) {
+        let temp = list.songs[test_start];
+        for (let i = test_start; i < test_end; i++) {
+          list.songs[i] = list.songs[i + 1];
+        }
+        list.songs[test_end] = temp;
+      } 
+      else if (test_start > test_end) {
+        let temp = list.songs[test_start];
+        for (let i = test_start; i > test_end; i--) {
+          list.songs[i] = list.songs[i - 1];
+        }
+        list.songs[test_end] = temp;
+      }
+      await api.putPlaylist(list._id, list);
+      store.setCurrentList(list._id);
+    }
+    asyncMoveSong(start,end);
+  };
 
   // THIS FUNCTION LOADS ALL THE ID, NAME PAIRS SO WE CAN LIST ALL THE LISTS
   store.loadIdNamePairs = function () {

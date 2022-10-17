@@ -25,6 +25,7 @@ export const GlobalStoreActionType = {
   CREATE_NEW_LIST: "CREATE_NEW_LIST",
   LOAD_ID_NAME_PAIRS: "LOAD_ID_NAME_PAIRS",
   SET_CURRENT_LIST: "SET_CURRENT_LIST",
+  DELETE_LIST: "DELETE_LIST",
   SET_LIST_NAME_EDIT_ACTIVE: "SET_LIST_NAME_EDIT_ACTIVE",
   SHOW_DELETE_LIST_MODAL: "SHOW_DELETE_LIST_MODAL",
   HIDE_DELETE_LIST_MODAL: "HIDE_DELETE_LIST_MODAL",
@@ -47,7 +48,7 @@ export const useGlobalStore = () => {
     listNameActive: false,
     deleteListId: null,
     deleteSongIndex: null,
-    editSongIndex: null
+    editSongIndex: null,
   });
 
   // HERE'S THE DATA STORE'S REDUCER, IT MUST
@@ -64,7 +65,7 @@ export const useGlobalStore = () => {
           listNameActive: false,
           deleteListId: null,
           deleteSongIndex: null,
-          editSongIndex: null
+          editSongIndex: null,
         });
       }
       // STOP EDITING THE CURRENT LIST
@@ -76,7 +77,7 @@ export const useGlobalStore = () => {
           listNameActive: false,
           deleteListId: null,
           deleteSongIndex: null,
-          editSongIndex: null
+          editSongIndex: null,
         });
       }
       // CREATE A NEW LIST
@@ -89,7 +90,7 @@ export const useGlobalStore = () => {
           listNameActive: false,
           deleteListId: null,
           deleteSongIndex: null,
-          editSongIndex: null
+          editSongIndex: null,
         });
       }
 
@@ -101,7 +102,7 @@ export const useGlobalStore = () => {
           listNameActive: payload,
           deleteListId: store.deleteListId,
           deleteSongIndex: null,
-          editSongIndex: null
+          editSongIndex: null,
         });
       }
       // GET ALL THE LISTS SO WE CAN PRESENT THEM
@@ -113,7 +114,7 @@ export const useGlobalStore = () => {
           listNameActive: false,
           deleteListId: null,
           deleteSongIndex: null,
-          editSongIndex: null
+          editSongIndex: null,
         });
       }
       // PREPARE TO DELETE A LIST
@@ -126,7 +127,7 @@ export const useGlobalStore = () => {
           listNameActive: false,
           deleteListId: payload.id,
           deleteSongIndex: null,
-          editSongIndex: null
+          editSongIndex: null,
         });
       }
 
@@ -139,7 +140,7 @@ export const useGlobalStore = () => {
           listNameActive: false,
           deleteListId: store.deleteListId,
           deleteSongIndex: payload,
-          editSongIndex: null
+          editSongIndex: null,
         });
       }
 
@@ -152,7 +153,7 @@ export const useGlobalStore = () => {
           listNameActive: false,
           deleteListId: store.deleteListId,
           deleteSongIndex: null,
-          editSongIndex: payload
+          editSongIndex: payload,
         });
       }
 
@@ -166,7 +167,7 @@ export const useGlobalStore = () => {
           listNameActive: false,
           deleteListId: null,
           deleteSongIndex: null,
-          editSongIndex: null
+          editSongIndex: null,
         });
       }
       case GlobalStoreActionType.DELETE_LIST: {
@@ -177,7 +178,7 @@ export const useGlobalStore = () => {
           listNameActive: false,
           deleteListId: null,
           deleteSongIndex: null,
-          editSongIndex: null
+          editSongIndex: null,
         });
       }
       // START EDITING A LIST NAME
@@ -189,7 +190,7 @@ export const useGlobalStore = () => {
           listNameActive: true,
           deleteListId: null,
           deleteSongIndex: null,
-          editSongIndex: null
+          editSongIndex: null,
         });
       }
 
@@ -201,7 +202,7 @@ export const useGlobalStore = () => {
           listNameActive: store.currentList,
           deleteListId: store.deleteListId,
           deleteSongIndex: null,
-          editSongIndex: null
+          editSongIndex: null,
         });
       }
 
@@ -213,7 +214,7 @@ export const useGlobalStore = () => {
           listNameActive: store.currentList,
           deleteListId: null,
           deleteSongIndex: null,
-          editSongIndex: null
+          editSongIndex: null,
         });
       }
 
@@ -225,7 +226,7 @@ export const useGlobalStore = () => {
           listNameActive: store.currentList,
           deleteListId: null,
           deleteSongIndex: null,
-          editSongIndex: null
+          editSongIndex: null,
         });
       }
 
@@ -237,7 +238,7 @@ export const useGlobalStore = () => {
           listNameActive: store.currentList,
           deleteListId: null,
           deleteSongIndex: null,
-          editSongIndex: null
+          editSongIndex: null,
         });
       }
       default:
@@ -320,18 +321,22 @@ export const useGlobalStore = () => {
     async function asyncDeleteList(test_id) {
       const response = await api.deletePlaylist(test_id);
       if (response.data.success) {
-        let result = await api.getPlaylistPairs();
-        let pairsArray = result.data.idNamePairs;
         storeReducer({
-          type: GlobalStoreActionType.CREATE_NEW_LIST,
-          payload: pairsArray,
+          type: GlobalStoreActionType.DELETE_LIST,
+          payload: null,
         });
-        store.hideDeleteListModal(test_id);
+        if (store.newListCounter === 0) {
+          storeReducer({
+            type: GlobalStoreActionType.LOAD_ID_NAME_PAIRS,
+            payload: [],
+          });
+        }
         store.loadIdNamePairs();
       } else {
         console.log("API FAILED TO GET THE LIST PAIRS");
       }
     }
+    store.hideDeleteListModal();
     asyncDeleteList(id);
   };
 
@@ -379,6 +384,22 @@ export const useGlobalStore = () => {
     }
     asyncDeleteSong(index);
     store.hideDeleteSongModal();
+  };
+
+  store.editSong = async function (index, title, artist, youTubeId) {
+    async function asyncEditSong(test_index,initTitle,initArtist,initYouTubeId) {
+      let list = store.currentList;
+      let newSong = {
+        title: initTitle,
+        artist: initArtist,
+        youTubeId: initYouTubeId,
+      };
+      list.songs[test_index] = newSong;
+      await api.putPlaylist(list._id, list);
+      store.setCurrentList(list._id);
+    }
+    asyncEditSong(index, title, artist, youTubeId);
+    store.hideEditSongModal();
   };
 
   /*store.popSong = function() {
@@ -537,19 +558,18 @@ export const useGlobalStore = () => {
       type: GlobalStoreActionType.MARK_SONG_FOR_EDITING,
       payload: index,
     });
-  }
+  };
 
-  
   store.hideEditSongModal = function () {
     let modal = document.getElementById("edit-song-modal");
-    if (modal !== null){
+    if (modal !== null) {
       modal.classList.remove("is-visible");
       storeReducer({
         type: GlobalStoreActionType.HIDE_EDIT_SONG_MODAL,
         payload: null,
       });
     }
-  }
+  };
   store.hideDeleteListModal = function () {
     let modal = document.getElementById("delete-list-modal");
     if (modal !== null) {

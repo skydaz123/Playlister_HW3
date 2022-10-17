@@ -3,13 +3,12 @@ import { GlobalStoreContext } from "../store";
 
 const EditSongModal = () => {
   const { store } = useContext(GlobalStoreContext);
-
-  if (store.currentList === null) {
-    return <div id="edit-song-modal"></div>;
-  } else {
     let title = document.getElementById("edit-song-title");
     let artist = document.getElementById("edit-song-artist");
     let youTubeId = document.getElementById("edit-song-youtube");
+  if (store.currentList === null) {
+    return <div id="edit-song-modal"></div>;
+  } else {
     let songToEdit = {
       title: "",
       artist: "",
@@ -76,7 +75,7 @@ const EditSongModal = () => {
             id="edit-song-confirm-button"
             className="modal-button"
             value="Confirm"
-            //onClick={() => }
+            onClick={() => store.editSong(store.editSongIndex, title.value, artist.value, youTubeId.value)}
           />
           <input
             type="button"

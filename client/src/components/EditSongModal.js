@@ -6,14 +6,15 @@ const EditSongModal = () => {
     let title = document.getElementById("edit-song-title");
     let artist = document.getElementById("edit-song-artist");
     let youTubeId = document.getElementById("edit-song-youtube");
-  if (store.currentList === null) {
-    return <div id="edit-song-modal"></div>;
-  } else {
     let songToEdit = {
       title: "",
       artist: "",
       youTubeId: "",
     };
+  if (store.currentList === null) {
+    return <div id="edit-song-modal"></div>;
+  } 
+  else {
     if (store.editSongIndex !== null) {
       let songList = store.currentList.songs;
       let song = songList[store.editSongIndex];
@@ -75,7 +76,7 @@ const EditSongModal = () => {
             id="edit-song-confirm-button"
             className="modal-button"
             value="Confirm"
-            onClick={() => store.editSong(store.editSongIndex, title.value, artist.value, youTubeId.value)}
+            onClick={() => store.addEditSongTransaction(store.editSongIndex, songToEdit, title.value, artist.value, youTubeId.value)}
           />
           <input
             type="button"

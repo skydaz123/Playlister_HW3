@@ -3,14 +3,14 @@ import { GlobalStoreContext } from "../store";
 
 const DeleteSongModal = () => {
   const { store } = useContext(GlobalStoreContext);
+  let songToDelete = {
+    title: "",
+    artist: "",
+    youTubeId: "",
+  }
   if (store.currentList === null) {
     return <div id="delete-song-modal"></div>;
   } else {
-    let songToDelete = {
-      title: "",
-      artist: "",
-      youTubeId: "",
-    };
     if (store.deleteSongIndex !== null) {
       let songList = store.currentList;
       let song = songList.songs[store.deleteSongIndex];
@@ -38,7 +38,7 @@ const DeleteSongModal = () => {
               type="button"
               id="delete-song-confirm-button"
               className="modal-button"
-              onClick={() => store.deleteSong(store.deleteSongIndex)}
+              onClick={() => store.addDeleteSongTransaction(store.deleteSongIndex, songToDelete)}
               value="Confirm"
             />
             <input

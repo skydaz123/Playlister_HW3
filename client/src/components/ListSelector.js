@@ -19,6 +19,10 @@ const ListSelector = () => {
     function handleCreateNewList() {
         store.createNewList();
     }
+    let enabledAddListButton = "playlister-button"
+    if (store.modalOpen){
+        enabledAddListButton += "-disabled";
+    }
     let listCard = "";
     if (store) {
         listCard = store.idNamePairs.map((pair) => (
@@ -37,7 +41,8 @@ const ListSelector = () => {
                     type="button"
                     id="add-list-button"
                     onClick={handleCreateNewList}
-                    className="playlister-button"
+                    disabled={store.modalOpen}
+                    className={enabledAddListButton}
                     value="+" />
                 <div id="list-selector-text">Your Lists</div>
             
